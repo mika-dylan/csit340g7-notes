@@ -3,7 +3,7 @@ import { useState } from "react";
 import NoteCard from "./NoteCard.jsx";
 
 function Notes() {
-  const [notes] = useState([
+  const [notes, setNotes] = useState([
     {
       id: 1,
       title: "Review map and filter",
@@ -15,6 +15,12 @@ function Notes() {
       body: "Practice writing one handler for many inputs.",
     },
   ]);
+
+  const [note, setNewNote] = useState({title: "", body: ""})
+  function handleChange(e){
+        const {name, value} = e.target
+        setNewNote({...note, [name]: value})
+  }
 
   return (
     <div className="grid min-h-screen grid-cols-[420px_1fr]">
@@ -39,12 +45,14 @@ function Notes() {
           </p>
           <input
             name="title"
+            value={note.title} onChange={handleChange}
             placeholder="Title"
             className="h-[52px] w-full border border-[#e6e6e6] px-4 text-lg outline-none placeholder:text-black/40 placeholder:italic focus:border-[#cf7d7d]"
           />
 
           <textarea
             name="body"
+            value={note.body} onChange={handleChange}
             placeholder="Write your note"
             className="h-[120px] w-full resize-none py-3 border border-[#e6e6e6] px-4 text-lg outline-none placeholder:text-black/40 placeholder:italic focus:border-[#cf7d7d]"
           />
