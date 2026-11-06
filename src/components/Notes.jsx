@@ -22,15 +22,23 @@ function Notes() {
     setNewNote({ ...note, [name]: value });
   }
 
+  function handleDelete(id) {
+    setNotes((prevNotes) => prevNotes.filter((item) => item.id !== id));
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    const trimmed1 = note.title.trim(); 
-    const trimmed2 = note.body.trim(); 
+    const trimmed1 = note.title.trim();
+    const trimmed2 = note.body.trim();
     if (trimmed1 === "" || trimmed2 === "") {
       return;
     }
 
-    const newNote = { id: crypto.randomUUID(), title: trimmed1, body: trimmed2 };
+    const newNote = {
+      id: crypto.randomUUID(),
+      title: trimmed1,
+      body: trimmed2,
+    };
     setNotes((prevNotes) => [...prevNotes, newNote]);
     setNewNote({ title: "", body: "" });
   }
@@ -93,6 +101,7 @@ function Notes() {
               <button
                 type="button"
                 className="absolute top-4 right-5 cursor-pointer text-[26px] leading-none text-[#949494] hover:text-[#c18585]"
+                onClick={() => handleDelete(item.id)}
               >
                 ×
               </button>
