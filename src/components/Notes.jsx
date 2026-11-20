@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import NoteCard from "./NoteCard.jsx";
 
@@ -23,6 +23,7 @@ function Notes() {
   })
 
   const [search, setSearch] = useState("");
+  const titleRef = useRef(null)
 
   useEffect(() => {
     localStorage.setItem('notes', JSON.stringify(notes))
@@ -63,11 +64,12 @@ function Notes() {
     };
     setNotes((prevNotes) => [...prevNotes, newNote]);
     setNewNote({ title: "", body: "" });
+    titleRef.current.focus();
   }
 
-    const filteredNotes = notes.filter((item) =>
+  const filteredNotes = notes.filter((item) =>
     item.title.toLowerCase().includes(search.trim().toLowerCase())
-    );
+  );
 
   return (
     <div className="grid min-h-screen grid-cols-[420px_1fr]">
@@ -88,11 +90,12 @@ function Notes() {
           />
         </div>
 
-        <note className="grid gap-3" onSubmit={handleSubmit}>
+        <form className="grid gap-3" onSubmit={handleSubmit}>
           <p className="text-[13px] font-normal tracking-wide text-[#949494]">
             NEW NOTE
           </p>
           <input
+            ref={titleRef}
             name="title"
             value={note.title}
             onChange={handleChange}
@@ -114,7 +117,7 @@ function Notes() {
           >
             Add note
           </button>
-        </note>
+        </form>
       </aside>
 
       <section className="px-12 py-11">
