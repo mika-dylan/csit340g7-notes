@@ -28,7 +28,17 @@ function Notes() {
     localStorage.setItem('notes', JSON.stringify(notes))
   }, [notes])
 
+
   const [note, setNewNote] = useState({ title: "", body: "" });
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      localStorage.setItem('draft', JSON.stringify(note))
+      console.log('draft saved:', note.title)
+    }, 1000)
+    return () => clearTimeout(id)
+  }, [note])
+
   function handleChange(e) {
     const { name, value } = e.target;
     setNewNote({ ...note, [name]: value });
@@ -78,7 +88,7 @@ function Notes() {
           />
         </div>
 
-        <form className="grid gap-3" onSubmit={handleSubmit}>
+        <note className="grid gap-3" onSubmit={handleSubmit}>
           <p className="text-[13px] font-normal tracking-wide text-[#949494]">
             NEW NOTE
           </p>
@@ -104,7 +114,7 @@ function Notes() {
           >
             Add note
           </button>
-        </form>
+        </note>
       </aside>
 
       <section className="px-12 py-11">
