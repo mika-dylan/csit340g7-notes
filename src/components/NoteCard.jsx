@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 function NoteCard({ title, body }) {
   const [showMore, setShowMore] = useState(false);
   return (
