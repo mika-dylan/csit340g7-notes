@@ -23,6 +23,10 @@ function Notes() {
   })
 
   const [search, setSearch] = useState("");
+
+
+
+
   const titleRef = useRef(null)
 
   useEffect(() => {
@@ -30,7 +34,10 @@ function Notes() {
   }, [notes])
 
 
-  const [note, setNewNote] = useState({ title: "", body: "" });
+  const [note, setNewNote] = useState(() => {
+    const saved = localStorage.getItem('draft')
+    return saved ? JSON.parse(saved) : startingNotes
+  })
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -64,6 +71,7 @@ function Notes() {
     };
     setNotes((prevNotes) => [...prevNotes, newNote]);
     setNewNote({ title: "", body: "" });
+    localStorage.removeItem("draft")
     titleRef.current.focus();
   }
 
