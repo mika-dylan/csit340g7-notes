@@ -23,10 +23,6 @@ function Notes() {
   })
 
   const [search, setSearch] = useState("");
-
-
-
-
   const titleRef = useRef(null)
 
   useEffect(() => {
