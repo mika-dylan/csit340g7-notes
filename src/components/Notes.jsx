@@ -35,10 +35,10 @@ function Notes() {
   }, [])
 
 
-  const [note, setNewNote] = useState(() => {
-    const saved = localStorage.getItem('draft')
-    return saved ? JSON.parse(saved) : startingNotes
-  })
+const [note, setNewNote] = useState(() => {
+  const saved = localStorage.getItem('draft')
+  return saved ? JSON.parse(saved) : { title: "", body: "" }
+})
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -57,24 +57,32 @@ function Notes() {
     setNotes((prevNotes) => prevNotes.filter((item) => item.id !== id));
   }, [notes])
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const trimmed1 = note.title.trim();
-    const trimmed2 = note.body.trim();
-    if (trimmed1 === "" || trimmed2 === "") {
-      return;
-    }
-
-    const newNote = {
-      id: crypto.randomUUID(),
-      title: trimmed1,
-      body: trimmed2,
-    };
-    setNotes((prevNotes) => [...prevNotes, newNote]);
-    setNewNote({ title: "", body: "" });
-    localStorage.removeItem("draft")
-    titleRef.current.focus();
+async function handleSubmit(e) {
+  e.preventDefault();
+  const trimmed1 = note.title.trim();
+  const trimmed2 = note.body.trim();
+  if (trimmed1 === "" || trimmed2 === "") {
+    return;
   }
+
+  localStorage.removeItem("draft")
+  try {
+    const res = await fetch(API_URL + '/notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: trimmed1, body: trimmed2 }),
+    })
+    if (!res.ok) {
+      throw new Error('The server answered ' + res.status)
+    }
+    const newNote = await res.json()
+    setNotes([...notes, newNote])
+    setNewNote({ title: "", body: "" })
+    titleRef.current.focus()
+  } catch (err) {
+    setError(err.message)
+  }
+}
 
   const filteredNotes = useMemo(() => {
     console.log('filtering')
